@@ -432,15 +432,15 @@ decorate = (api, md, slugCache, verbose) ->
 
               if item.content and not process.env.DRAFTER_EXAMPLES
                 for dataStructure in item.content
-                  if dataStructure.element is 'dataStructure'
-                    try
-                      item.body = JSON.stringify(renderExample(
-                        dataStructure.content[0], dataStructures), null, 2)
-                    catch err
-                      if verbose
-                        console.log(
-                          JSON.stringify dataStructure.content[0], null, 2)
-                        console.log(err)
+                  if dataStructure.element is 'asset' and
+                    dataStructure.attributes.role is "bodyExample"
+                      try
+                        item.body = dataStructure.content
+                      catch err
+                        if verbose
+                          console.log(
+                            JSON.stringify dataStructure.content[0], null, 2)
+                          console.log(err)
 
               item.hasContent = item.description or \
                                 Object.keys(item.headers).length or \

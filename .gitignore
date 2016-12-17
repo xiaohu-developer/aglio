@@ -3,3 +3,9 @@ node_modules
 npm-debug.log
 coverage
 cache
+.idea/aglio.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/dictionaries/dennis.xml

@@ -172,7 +172,7 @@ mixin Examples(resourceGroup, resource, action)
         each request in example.requests
             +RequestResponse('Request', request, false, true)
         each response in example.responses
-            +RequestResponse('Response', response, true, true)
+            +RequestResponse('Response', response, false, true)
 
 mixin Content()
     //- Page header and API description

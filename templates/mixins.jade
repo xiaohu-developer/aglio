@@ -117,6 +117,26 @@ mixin RequestResponse(title, request, collapse, showSchema)
                 span.open Show
     +RequestResponseBody(request, collapse, false, showSchema)
 
+
+mixin PrintDataStructure(dataStructures)
+    each dataStructure in dataStructures || []
+        if dataStructure.element == "member" && dataStructure.content.value.element != "array"
+            tr
+                td #{dataStructure.content.key.content}
+                td #{dataStructure.content.value.element}
+                td #{dataStructure.attributes && dataStructure.attributes.typeAttributes ? dataStructure.attributes.typeAttributes[0] : ''}
+                td #{dataStructure.meta && dataStructure.meta.description}
+        else if dataStructure.element == "member" && dataStructure.content.value.element == "array"
+            tr
+                td #{dataStructure.content.key.content}
+                td #{dataStructure.content.value.element}
+                td #{dataStructure.attributes && dataStructure.attributes.typeAttributes ? dataStructure.attributes.typeAttributes[0] : ''}
+                td #{dataStructure.meta && dataStructure.meta.description}
+            +PrintDataStructure(dataStructure.content.value.content)
+        else if dataStructure.element == "object"
+            +PrintDataStructure(dataStructure.content)
+
+
 mixin RequestResponseBody(request, collapse, showBlank, showSchema)
     if request.hasContent || showBlank
         div(class=collapse ? 'collapse-content' : ''): .inner
@@ -131,29 +151,28 @@ mixin RequestResponseBody(request, collapse, showBlank, showSchema)
                         if index < request.headers.length - 1
                             br
                 div(style="height: 1px;")
+
+            if showSchema && request.content
+                h5 Attributes
+                - var content = request.content
+                each item in content
+                    if item.element == "dataStructure"
+                        - var dataStructure = item.content;
+                        table(style="width: 100%;")
+                            thead
+                                tr
+                                    th Attribute name
+                                    th Type
+                                    th Required
+                                    th Description
+                                    +PrintDataStructure(dataStructure)
+
             if request.body
                 h5 Body
                 pre: code
                     != self.highlight(request.body, null, ['json', 'yaml', 'xml', 'javascript'])
                 div(style="height: 1px;")
-            if showSchema && request.schema
-                - var schema = JSON.parse(request.schema)
-                table(style="width: 100%;")
-                    thead
-                        tr
-                            th Attribute name
-                            th Type
-                            th Required
-                            th Description
-                            th Constraints
-                            each description, name in schema.properties || []
-                                tr
-                                    td #{name}
-                                    td #{description.type}
-                                    td #{schema.required && schema.required.indexOf(name) >= 0 ? 'true' : ''}
-                                    td #{description.description}
-                                    td
-                                        +Constraints(name, schema)
+
                 div.title
                     .collapse-button
                         span.close Hide

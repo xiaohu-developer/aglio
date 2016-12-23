@@ -118,23 +118,35 @@ mixin RequestResponse(title, request, collapse, showSchema)
     +RequestResponseBody(request, collapse, false, showSchema)
 
 
-mixin PrintDataStructure(dataStructures)
+mixin PrintDataStructure(dataStructures, index)
+
+    if !index
+        - index = 0
+
     each dataStructure in dataStructures || []
         if dataStructure.element == "member" && dataStructure.content.value.element != "array"
             tr
-                td #{dataStructure.content.key.content}
+                td
+                    - for(var i = 0; i < index; i++)
+                    | &nbsp;&nbsp;
+
+                    | #{dataStructure.content.key.content}
                 td #{dataStructure.content.value.element}
                 td #{dataStructure.attributes && dataStructure.attributes.typeAttributes ? dataStructure.attributes.typeAttributes[0] : ''}
                 td #{dataStructure.meta && dataStructure.meta.description}
         else if dataStructure.element == "member" && dataStructure.content.value.element == "array"
             tr
-                td #{dataStructure.content.key.content}
+                td
+                    - for(var i = 0; i < index; i++)
+                    | &nbsp;&nbsp;
+
+                    | #{dataStructure.content.key.content}
                 td #{dataStructure.content.value.element}
                 td #{dataStructure.attributes && dataStructure.attributes.typeAttributes ? dataStructure.attributes.typeAttributes[0] : ''}
                 td #{dataStructure.meta && dataStructure.meta.description}
-            +PrintDataStructure(dataStructure.content.value.content)
+            +PrintDataStructure(dataStructure.content.value.content, index+1)
         else if dataStructure.element == "object"
-            +PrintDataStructure(dataStructure.content)
+            +PrintDataStructure(dataStructure.content, index+1)
 
 
 mixin RequestResponseBody(request, collapse, showBlank, showSchema)

@@ -1,6 +1,6 @@
 {
   "name": "aglio-theme-dlio",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Modified olio theme for the Aglio API Blueprint renderer",
   "main": "lib/main.js",
   "scripts": {

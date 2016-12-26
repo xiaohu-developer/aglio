@@ -124,7 +124,7 @@ mixin PrintDataStructure(dataStructures, index)
         - index = 0
 
     each dataStructure in dataStructures || []
-        if dataStructure.element == "member" && dataStructure.content.value.element != "array"
+        if dataStructure.element == "member" && dataStructure.content.value.element != "array" && dataStructure.content.value.element != "object"
             tr
                 td
                     - for(var i = 0; i < index; i++)
@@ -134,7 +134,7 @@ mixin PrintDataStructure(dataStructures, index)
                 td #{dataStructure.content.value.element}
                 td #{dataStructure.attributes && dataStructure.attributes.typeAttributes ? dataStructure.attributes.typeAttributes[0] : ''}
                 td #{dataStructure.meta && dataStructure.meta.description}
-        else if dataStructure.element == "member" && dataStructure.content.value.element == "array"
+        else if dataStructure.element == "member" && (dataStructure.content.value.element == "array" || dataStructure.content.value.element == "object")
             tr
                 td
                     - for(var i = 0; i < index; i++)
